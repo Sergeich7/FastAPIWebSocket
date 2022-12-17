@@ -11,3 +11,18 @@
 Страница должна быть динамической, обрабатывать все действия без перезагрузки.Имеется ввиду что при отправке сообщения на сервер через WebSocket страница не должна перезагружаться.
 
 Взаимодействие с сервером по WebSocket нужно реализовать с использованием JSON. Формат и именование полей не важно. можно использовать любые.
+
+### Установка и запуск
+
+* git clone https://github.com/Sergeich7/FastAPIWebSocket.git
+* cd FastAPIWebSocket
+
+Docker:
+* docker build . -t fastapiwebsocket
+* docker run -d --rm --name FastAPIWebSocket -p 8000:8000 fastapiwebsocket
+
+или Docker compose:
+* docker-compose up --build -d
+
+### Результат
+* http://localhost:8000/
