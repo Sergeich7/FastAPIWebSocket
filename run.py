@@ -40,7 +40,6 @@ html = """
         <div id='messages'>
         </div>
         <script>
-            var clientID = Date.now();
             var ws = new WebSocket('ws://' + document.domain + ':8000/ws');
             ws.onmessage = function(event) {
                 const obj = JSON.parse(event.data)
@@ -57,7 +56,6 @@ html = """
                 var input = document.getElementById("messageText")
                 ws.send(JSON.stringify(
                     {
-                        'id': clientID,
                         'text': input.value
                     }))
                 input.value = ''
@@ -75,34 +73,17 @@ async def get():
     return HTMLResponse(html)
 
 
-def make_counter() -> int:
-    """Замыкание для увеличения и хранения номера сообщения."""
-    number = 0
-
-    def incr() -> int:
-        nonlocal number
-        number += 1
-        return number
-
-    return incr
-
-
 @app.websocket("/ws")
 async def websocket_endpoint(websocket: WebSocket):
     """Websocket обработчик."""
     await websocket.accept()
-    number_by_id = {}
+
+    message_number = 0
+
     while True:
         data = await websocket.receive_json()
-        client_id = data['id']
 
-        if client_id not in number_by_id.keys():
-            # Создаем счетчик для каждого клиента
-            # Значение счетчика храним в замыкании
-            number_by_id[client_id] = make_counter()
-
-        # получаем номер текущего сообщения из замыкания
-        message_number = number_by_id[client_id]()
+        message_number += 1
 
         await websocket.send_json(
             {
