@@ -87,3 +87,4 @@ async def websocket_endpoint(websocket: WebSocket):
                 "number": message_number,
                 "text": data['text'],
             })
+
