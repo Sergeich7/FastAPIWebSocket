@@ -75,6 +75,18 @@ async def get():
     return HTMLResponse(html)
 
 
+def make_counter() -> int:
+    """Замыкание для увеличения и хранения номера сообщения."""
+    number = 0
+
+    def incr() -> int:
+        nonlocal number
+        number += 1
+        return number
+
+    return incr
+
+
 @app.websocket("/ws")
 async def websocket_endpoint(websocket: WebSocket):
     """Websocket обработчик."""
@@ -83,11 +95,15 @@ async def websocket_endpoint(websocket: WebSocket):
     while True:
         data = await websocket.receive_json()
         client_id = data['id']
-        # на реальном проекте здесь я бы использовал REDIS
-        # или нужен какой-то механизм очищения устаревших данных
-        message_number = number_by_id.get(client_id, 0)
-        message_number += 1
-        number_by_id[client_id] = message_number
+
+        if not number_by_id[client_id]:
+            # Создаем счетчик для каждого клиента
+            # Значение счетчика храним в замыкании
+            number_by_id[client_id] = make_counter()
+
+        # получаем номер текущего сообщения из замыкания
+        message_number = number_by_id[client_id]()
+
         await websocket.send_json(
             {
                 "number": message_number,
