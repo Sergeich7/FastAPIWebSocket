@@ -96,7 +96,7 @@ async def websocket_endpoint(websocket: WebSocket):
         data = await websocket.receive_json()
         client_id = data['id']
 
-        if not number_by_id[client_id]:
+        if client_id not in number_by_id.keys():
             # Создаем счетчик для каждого клиента
             # Значение счетчика храним в замыкании
             number_by_id[client_id] = make_counter()
