@@ -40,6 +40,7 @@ html = """
         <div id='messages'>
         </div>
         <script>
+            var clientID = Date.now();
             var ws = new WebSocket('ws://' + document.domain + ':8000/ws');
             ws.onmessage = function(event) {
                 const obj = JSON.parse(event.data)
@@ -54,7 +55,11 @@ html = """
             };
             function sendMessage(event) {
                 var input = document.getElementById("messageText")
-                ws.send(JSON.stringify({'text': input.value}))
+                ws.send(JSON.stringify(
+                    {
+                        'id': clientID,
+                        'text': input.value
+                    }))
                 input.value = ''
                 event.preventDefault()
             }
@@ -63,14 +68,10 @@ html = """
 </html>
 """
 
-message_number = 0
-
 
 @app.get("/")
 async def get():
     """Отдаем главную страницу."""
-    global message_number
-    message_number = 0
     return HTMLResponse(html)
 
 
@@ -78,10 +79,15 @@ async def get():
 async def websocket_endpoint(websocket: WebSocket):
     """Websocket обработчик."""
     await websocket.accept()
+    number_by_id = {}
     while True:
         data = await websocket.receive_json()
-        global message_number
+        client_id = data['id']
+        # на реальном проекте здесь я бы использовал REDIS
+        # или нужен какой-то механизм очищения устаревших данных
+        message_number = number_by_id.get(client_id, 0)
         message_number += 1
+        number_by_id[client_id] = message_number
         await websocket.send_json(
             {
                 "number": message_number,
