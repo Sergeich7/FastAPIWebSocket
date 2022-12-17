@@ -1,25 +1,6 @@
 
-# покрытие тестами
-.coverage*
-htmlcov/
-
 # материалы для разработки
-.restart-app
 Материалы/
-ttt.py
-tttcopy.py
-
-# картинки, видео, база данных
-data/certbot
-data/mysql
-media/
-static/
-
-# пароли
-.env
-
-# миграции
-migrations/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

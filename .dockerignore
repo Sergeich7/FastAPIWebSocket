@@ -1,24 +1,5 @@
-# покрытие тестами
-.coverage
-htmlcov/
-
 # материалы для разработки
-.restart-app
 Материалы/
-ttt.py
-tttcopy.py
-
-# картинки, видео, база данных
-media/
-
-# пароли
-config.json
-.env
-
-# миграции
-art/migrations/
-users/migrations/
-
 
 # Git
 .git
