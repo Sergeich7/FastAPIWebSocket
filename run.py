@@ -40,7 +40,7 @@ html = """
         <div id='messages'>
         </div>
         <script>
-            var ws = new WebSocket("ws://localhost:8000/ws");
+            var ws = new WebSocket('ws://' + document.domain + ':8000/ws');
             ws.onmessage = function(event) {
                 const obj = JSON.parse(event.data)
                 var content = document.createTextNode(
