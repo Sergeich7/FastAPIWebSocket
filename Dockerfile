@@ -6,4 +6,4 @@ COPY . /app/
 RUN pip install -r requirements.txt
 EXPOSE 8000
 ENV PYTHONUNBUFFERED 1
-CMD ["uvicorn", "run:app", "--host", "0.0.0.0"]
+CMD ["python", "run.py"]

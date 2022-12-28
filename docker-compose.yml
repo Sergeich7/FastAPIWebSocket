@@ -4,8 +4,8 @@ services:
 
     web:
         build: .
-        container_name: fastapiwebsocket
+        container_name: fastapi_test_tasks
         restart: unless-stopped
-        command: uvicorn --host 0.0.0.0 run:app
+        command: python run.py
         ports:
             - "8000:8000"
